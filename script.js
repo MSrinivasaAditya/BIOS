@@ -38,31 +38,36 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // --- 2. Horizontal Scrolling for Gauntlet (Mouse Wheel) ---
-  const scrollContainer = document.querySelector(".horizontal-scroll");
+  const scrollSections = document.querySelectorAll(".narrative");
 
-  if (scrollContainer && window.matchMedia("(pointer: fine)").matches) {
-    scrollContainer.addEventListener("wheel", (evt) => {
-      // Check if user is scrolling mostly horizontally vs vertically
-      // To allow normal page scroll if they hit the edge, but for simplicity here we assume scroll shift
-      evt.preventDefault();
-      scrollContainer.scrollLeft += evt.deltaY;
-    });
-  }
+  scrollSections.forEach((section) => {
+    const scrollContainer = section.querySelector(".horizontal-scroll");
+    if (!scrollContainer) return;
 
-  const scrollLeftBtn = document.getElementById("scroll-left");
-  const scrollRightBtn = document.getElementById("scroll-right");
+    if (window.matchMedia("(pointer: fine)").matches) {
+      scrollContainer.addEventListener("wheel", (evt) => {
+        // Check if user is scrolling mostly horizontally vs vertically
+        // To allow normal page scroll if they hit the edge, but for simplicity here we assume scroll shift
+        evt.preventDefault();
+        scrollContainer.scrollLeft += evt.deltaY;
+      });
+    }
 
-  if (scrollContainer && scrollLeftBtn && scrollRightBtn) {
-    const scrollAmount = 350; // approximate width of one card + gap
+    const scrollLeftBtn = section.querySelector(".scroll-btn[aria-label='Scroll left'], #scroll-left");
+    const scrollRightBtn = section.querySelector(".scroll-btn[aria-label='Scroll right'], #scroll-right");
 
-    scrollLeftBtn.addEventListener("click", () => {
-      scrollContainer.scrollBy({ left: -scrollAmount, behavior: "smooth" });
-    });
+    if (scrollLeftBtn && scrollRightBtn) {
+      const scrollAmount = 350; // approximate width of one card + gap
 
-    scrollRightBtn.addEventListener("click", () => {
-      scrollContainer.scrollBy({ left: scrollAmount, behavior: "smooth" });
-    });
-  }
+      scrollLeftBtn.addEventListener("click", () => {
+        scrollContainer.scrollBy({ left: -scrollAmount, behavior: "smooth" });
+      });
+
+      scrollRightBtn.addEventListener("click", () => {
+        scrollContainer.scrollBy({ left: scrollAmount, behavior: "smooth" });
+      });
+    }
+  });
 
   // --- 3. Fade-up Intersection Observer Component ---
   const fadeElements = document.querySelectorAll(".fade-up");
