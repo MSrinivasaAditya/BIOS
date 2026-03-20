@@ -10,70 +10,326 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Manrope:wght@400;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
     <style>
-        /* ── Gallery-page-specific styles ── */
-        .gallery-page-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 1.25rem;
-            margin-top: 3rem;
-        }
-
-        .gallery-thumb {
+        /* ── Carousel ── */
+        .carousel-container {
             position: relative;
-            border-radius: 16px;
+            width: 100%;
+            max-width: 900px;
+            margin: 2rem auto 0;
+            border-radius: 20px;
             overflow: hidden;
-            aspect-ratio: 4 / 3;
-            cursor: zoom-in;
-            background: rgba(255,255,255,0.04);
-            border: 1px solid rgba(255,255,255,0.08);
-            transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1),
-                        box-shadow 0.35s ease;
+            background: rgba(0, 0, 0, 0.25);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 16px 60px rgba(0, 0, 0, 0.4);
         }
 
-        .gallery-thumb img {
+        .carousel-track-wrapper {
+            position: relative;
             width: 100%;
-            height: 100%;
+            overflow: hidden;
+        }
+
+        .carousel-track {
+            display: flex;
+            transition: transform 0.55s cubic-bezier(0.4, 0, 0.2, 1);
+            will-change: transform;
+        }
+
+        .carousel-slide {
+            min-width: 100%;
+            position: relative;
+            cursor: zoom-in;
+        }
+
+        .carousel-slide img {
+            width: 100%;
+            aspect-ratio: 16 / 10;
             object-fit: cover;
             display: block;
-            transition: transform 0.5s ease, filter 0.5s ease;
-            filter: brightness(0.85) saturate(1.1);
+            filter: brightness(0.9) saturate(1.1);
+            transition: filter 0.4s ease;
         }
 
-        .gallery-thumb:hover {
-            transform: translateY(-6px) scale(1.02);
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5),
-                        0 0 0 1px rgba(139, 92, 246, 0.35);
+        .carousel-container:hover .carousel-slide img {
+            filter: brightness(1) saturate(1.2);
         }
 
-        .gallery-thumb:hover img {
-            transform: scale(1.08);
-            filter: brightness(1) saturate(1.3);
-        }
-
-        .gallery-thumb .thumb-overlay {
+        .carousel-slide .slide-caption {
             position: absolute;
-            inset: 0;
-            background: linear-gradient(to top,
-                rgba(0, 0, 0, 0.7) 0%,
-                rgba(0, 0, 0, 0) 55%);
-            display: flex;
-            align-items: flex-end;
-            padding: 1.25rem;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 2.5rem 2rem 1.5rem;
+            background: linear-gradient(to top, rgba(0,0,0,0.75) 0%, transparent 100%);
+            color: #fff;
+            font-family: var(--font-display);
+            font-size: 1rem;
+            font-weight: 600;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
             opacity: 0;
-            transition: opacity 0.35s ease;
+            transform: translateY(8px);
+            transition: opacity 0.35s ease, transform 0.35s ease;
         }
 
-        .gallery-thumb:hover .thumb-overlay {
+        .carousel-container:hover .carousel-slide .slide-caption {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Carousel Arrows */
+        .carousel-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 46px;
+            height: 46px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #fff;
+            font-size: 1.3rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
+            transition: background 0.25s ease, transform 0.25s ease, box-shadow 0.25s ease;
+            opacity: 0;
+        }
+
+        .carousel-container:hover .carousel-btn {
             opacity: 1;
         }
 
-        .thumb-overlay span {
-            color: #fff;
-            font-family: var(--font-display);
-            font-size: 0.9rem;
+        .carousel-btn:hover {
+            background: rgba(255, 255, 255, 0.25);
+            transform: translateY(-50%) scale(1.1);
+            box-shadow: 0 4px 20px rgba(139, 92, 246, 0.3);
+        }
+
+        .carousel-btn.prev { left: 1rem; }
+        .carousel-btn.next { right: 1rem; }
+
+        /* Carousel Dots */
+        .carousel-dots {
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+            padding: 1rem 0;
+            background: rgba(0, 0, 0, 0.15);
+        }
+
+        .carousel-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            border: 1.5px solid rgba(255, 255, 255, 0.35);
+            background: transparent;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            padding: 0;
+        }
+
+        .carousel-dot.active {
+            background: #8B5CF6;
+            border-color: #8B5CF6;
+            transform: scale(1.2);
+            box-shadow: 0 0 10px rgba(139, 92, 246, 0.5);
+        }
+
+        .carousel-dot:hover:not(.active) {
+            border-color: rgba(255, 255, 255, 0.7);
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        /* Slide counter badge */
+        .carousel-counter {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            padding: 0.3rem 0.75rem;
+            border-radius: 100px;
+            background: rgba(0, 0, 0, 0.45);
+            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(6px);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            color: rgba(255, 255, 255, 0.75);
+            font-size: 0.8rem;
             font-weight: 600;
-            letter-spacing: 0.05em;
+            letter-spacing: 0.08em;
+            z-index: 10;
+        }
+
+        /* ── Section Divider ── */
+        .memoir-divider {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            margin: 5rem 0 2rem;
+        }
+
+        .memoir-divider .divider-line {
+            flex: 1;
+            height: 1px;
+            background: linear-gradient(90deg,
+                transparent 0%,
+                rgba(139, 92, 246, 0.5) 50%,
+                transparent 100%);
+        }
+
+        .memoir-divider .divider-icon {
+            width: 52px;
+            height: 52px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            background: rgba(139, 92, 246, 0.1);
+            border: 1px solid rgba(139, 92, 246, 0.25);
+            flex-shrink: 0;
+            animation: divider-glow 3s ease-in-out infinite;
+        }
+
+        @keyframes divider-glow {
+            0%, 100% { box-shadow: 0 0 12px rgba(139, 92, 246, 0.15); }
+            50% { box-shadow: 0 0 28px rgba(139, 92, 246, 0.35); }
+        }
+
+        .memoir-section-header {
+            text-align: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .memoir-section-header h3 {
+            font-size: 2.2rem;
+            font-family: var(--font-display);
+            font-weight: 800;
             text-transform: uppercase;
+            margin: 0;
+        }
+
+        .memoir-section-header p {
+            color: var(--text-secondary);
+            font-size: 1.05rem;
+            margin-top: 0.5rem;
+        }
+
+        /* ── Coming Soon Card ── */
+        .coming-soon-wrapper {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 2rem;
+            padding: 3rem 1rem;
+        }
+
+        .coming-soon-card {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            padding: 4rem 3rem;
+            text-align: center;
+            border-radius: 24px;
+            background: rgba(255, 255, 255, 0.03);
+            overflow: hidden;
+            isolation: isolate;
+        }
+
+        .coming-soon-card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 24px;
+            padding: 2px;
+            background: linear-gradient(135deg,
+                rgba(139, 92, 246, 0.6),
+                rgba(59, 130, 246, 0.4),
+                rgba(236, 72, 153, 0.5),
+                rgba(139, 92, 246, 0.6));
+            background-size: 300% 300%;
+            animation: gradient-spin 4s ease infinite;
+            -webkit-mask:
+                linear-gradient(#fff 0 0) content-box,
+                linear-gradient(#fff 0 0);
+            mask:
+                linear-gradient(#fff 0 0) content-box,
+                linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            z-index: -1;
+        }
+
+        @keyframes gradient-spin {
+            0%   { background-position: 0% 50%; }
+            50%  { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .coming-soon-icon {
+            font-size: 3.5rem;
+            margin-bottom: 1.5rem;
+            display: inline-block;
+            animation: float-icon 3s ease-in-out infinite;
+        }
+
+        @keyframes float-icon {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .coming-soon-card h4 {
+            font-family: var(--font-display);
+            font-size: 1.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            margin: 0 0 1rem;
+            background: linear-gradient(135deg, #8B5CF6, #3B82F6, #EC4899);
+            background-size: 200% 200%;
+            animation: gradient-spin 4s ease infinite;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .coming-soon-card p {
+            color: var(--text-secondary);
+            font-size: 1.05rem;
+            line-height: 1.7;
+            margin: 0;
+        }
+
+        .coming-soon-pulse {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-top: 1.5rem;
+            padding: 0.5rem 1.25rem;
+            border-radius: 100px;
+            background: rgba(139, 92, 246, 0.1);
+            border: 1px solid rgba(139, 92, 246, 0.2);
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+
+        .coming-soon-pulse .pulse-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #8B5CF6;
+            animation: pulse-blink 1.5s ease-in-out infinite;
+        }
+
+        @keyframes pulse-blink {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.4; transform: scale(0.7); }
         }
 
         /* ── Lightbox ── */
@@ -213,78 +469,88 @@
         </div>
     </nav>
 
-    <!-- Gallery Section -->
+    <!-- Memoirs Page -->
     <section id="gallery-page" class="narrative" style="padding-top: 15rem; min-height: 80vh;">
+
+        <!-- Page Header -->
         <div class="section-intro text-center fade-up" style="text-align: center; margin-bottom: 2rem;">
             <p class="eyebrow">BIOS Through The Lens</p>
-            <h2>Our <span class="gradient-text">Heritage</span></h2>
+            <h2>Our <span class="gradient-text">Memoirs</span></h2>
             <p style="margin: 0 auto;">Relive the energy, passion, and brilliance of BIOS. Every frame a story, every moment a memory.</p>
         </div>
 
-        <!-- Photo Grid -->
-        <div class="gallery-page-grid fade-up" id="galleryGrid">
-
-            <div class="gallery-thumb interactive-card" data-index="0">
-                <img src="images/mainpage1.jpeg" alt="BIOS 2K26 Event" loading="lazy">
-                <div class="thumb-overlay"><span>The Event</span></div>
-            </div>
-
-            <div class="gallery-thumb interactive-card" data-index="1">
-                <img src="images/mainpage2.jpeg" alt="BIOS 2K26 Crowd" loading="lazy">
-                <div class="thumb-overlay"><span>The Crowd</span></div>
-            </div>
-
-            <div class="gallery-thumb interactive-card" data-index="2">
-                <img src="images/mainpage3.jpeg" alt="BIOS 2K26 Community" loading="lazy">
-                <div class="thumb-overlay"><span>The Community</span></div>
-            </div>
-
-            <div class="gallery-thumb interactive-card" data-index="3">
-                <img src="images/mainpage4.jpeg" alt="BIOS 2K26 Legacy" loading="lazy">
-                <div class="thumb-overlay"><span>The Legacy</span></div>
-            </div>
-
-            <div class="gallery-thumb interactive-card" data-index="4">
-                <img src="images/shodasi.jpeg" alt="Shodasi at BIOS" loading="lazy">
-                <div class="thumb-overlay"><span>Shodasi</span></div>
-            </div>
-
-            <div class="gallery-thumb interactive-card" data-index="5">
-                <img src="images/ghiri.jpeg" alt="Cultural Moment" loading="lazy">
-                <div class="thumb-overlay"><span>Cultural Moments</span></div>
-            </div>
-
-            <div class="gallery-thumb interactive-card" data-index="6">
-                <img src="images/navaneeth.jpeg" alt="Event Coordinator" loading="lazy">
-                <div class="thumb-overlay"><span>Behind the Scenes</span></div>
-            </div>
-
-            <div class="gallery-thumb interactive-card" data-index="7">
-                <img src="images/guhan.jpeg" alt="Event Coordination" loading="lazy">
-                <div class="thumb-overlay"><span>In Action</span></div>
-            </div>
-
-            <div class="gallery-thumb interactive-card" data-index="8">
-                <img src="images/rajasekar.jpeg" alt="Photography at BIOS" loading="lazy">
-                <div class="thumb-overlay"><span>Through The Lens</span></div>
-            </div>
-
-            <div class="gallery-thumb interactive-card" data-index="9">
-                <img src="images/vibhu.jpeg" alt="Media Team" loading="lazy">
-                <div class="thumb-overlay"><span>Media Team</span></div>
-            </div>
-
-            <div class="gallery-thumb interactive-card" data-index="10">
-                <img src="images/Rahul.jpeg" alt="BIOS Team" loading="lazy">
-                <div class="thumb-overlay"><span>BIOS Team</span></div>
-            </div>
-
-            <div class="gallery-thumb interactive-card" data-index="11">
-                <img src="images/vishnu.jpeg" alt="BIOS Spirit" loading="lazy">
-                <div class="thumb-overlay"><span>BIOS Spirit</span></div>
-            </div>
-
+        <!-- ═══════════════════════════════ -->
+        <!--        TECHNICAL EVENTS         -->
+        <!-- ═══════════════════════════════ -->
+        <div class="memoir-divider fade-up">
+            <div class="divider-line"></div>
+            <div class="divider-icon">🔬</div>
+            <div class="divider-line"></div>
         </div>
+
+        <div class="memoir-section-header fade-up">
+            <h3>Technical <span class="gradient-text">Events</span></h3>
+            <p>Where logic meets innovation — highlights from this year's technical battleground.</p>
+        </div>
+
+        <div class="carousel-container fade-up" id="techCarousel">
+            <div class="carousel-track-wrapper">
+                <div class="carousel-track" id="techTrack">
+
+                    <div class="carousel-slide">
+                        <img src="images/mainpage1.jpeg" alt="Technical Event – The Arena" loading="lazy">
+                        <div class="slide-caption">The Arena</div>
+                    </div>
+
+                    <div class="carousel-slide">
+                        <img src="images/mainpage2.jpeg" alt="Technical Event – Minds At Work" loading="lazy">
+                        <div class="slide-caption">Minds At Work</div>
+                    </div>
+
+                    <div class="carousel-slide">
+                        <img src="images/mainpage3.jpeg" alt="Technical Event – Team Synergy" loading="lazy">
+                        <div class="slide-caption">Team Synergy</div>
+                    </div>
+
+                    <div class="carousel-slide">
+                        <img src="images/mainpage4.jpeg" alt="Technical Event – Code & Conquer" loading="lazy">
+                        <div class="slide-caption">Code &amp; Conquer</div>
+                    </div>
+
+                </div>
+                <button class="carousel-btn prev" aria-label="Previous slide">&#8592;</button>
+                <button class="carousel-btn next" aria-label="Next slide">&#8594;</button>
+                <div class="carousel-counter" id="techCounter">1 / 4</div>
+            </div>
+            <div class="carousel-dots" id="techDots"></div>
+        </div>
+
+        <!-- ═══════════════════════════════ -->
+        <!--      NON-TECHNICAL EVENTS       -->
+        <!-- ═══════════════════════════════ -->
+        <div class="memoir-divider fade-up">
+            <div class="divider-line"></div>
+            <div class="divider-icon">🎭</div>
+            <div class="divider-line"></div>
+        </div>
+
+        <div class="memoir-section-header fade-up">
+            <h3>Non-Technical <span class="gradient-text">Events</span></h3>
+            <p>Art, culture, and spirit — the heart of BIOS beyond the code.</p>
+        </div>
+
+        <div class="coming-soon-wrapper fade-up">
+            <div class="coming-soon-card">
+                <div class="coming-soon-icon">🎬</div>
+                <h4>Coming Soon</h4>
+                <p>The stage is being set, the spotlight is warming up. Non-technical event photos will go live right after the events next week.</p>
+                <div class="coming-soon-pulse">
+                    <span class="pulse-dot"></span>
+                    Stay Tuned
+                </div>
+            </div>
+        </div>
+
     </section>
 
     <!-- Lightbox -->
@@ -318,57 +584,122 @@
 
     <script src="script.js"></script>
     <script>
-        // ── Lightbox logic ──
-        (function () {
-            const thumbs = Array.from(document.querySelectorAll('.gallery-thumb'));
-            const images = thumbs.map(t => ({
-                src: t.querySelector('img').src,
-                alt: t.querySelector('img').alt,
-                label: t.querySelector('.thumb-overlay span').textContent
+    (function () {
+        /* ═══ Carousel Engine ═══ */
+        function initCarousel(containerId) {
+            const container = document.getElementById(containerId);
+            if (!container) return;
+
+            const track     = container.querySelector('.carousel-track');
+            const slides    = Array.from(track.children);
+            const prevBtn   = container.querySelector('.carousel-btn.prev');
+            const nextBtn   = container.querySelector('.carousel-btn.next');
+            const dotsWrap  = container.querySelector('.carousel-dots');
+            const counter   = container.querySelector('.carousel-counter');
+            let current     = 0;
+            let autoTimer   = null;
+
+            // Build dot indicators
+            slides.forEach((_, i) => {
+                const dot = document.createElement('button');
+                dot.classList.add('carousel-dot');
+                if (i === 0) dot.classList.add('active');
+                dot.setAttribute('aria-label', 'Go to slide ' + (i + 1));
+                dot.addEventListener('click', () => goTo(i));
+                dotsWrap.appendChild(dot);
+            });
+            const dots = Array.from(dotsWrap.children);
+
+            function goTo(index) {
+                current = ((index % slides.length) + slides.length) % slides.length;
+                track.style.transform = 'translateX(-' + (current * 100) + '%)';
+                dots.forEach((d, i) => d.classList.toggle('active', i === current));
+                if (counter) counter.textContent = (current + 1) + ' / ' + slides.length;
+            }
+
+            prevBtn.addEventListener('click', () => goTo(current - 1));
+            nextBtn.addEventListener('click', () => goTo(current + 1));
+
+            // Auto-play (pause on hover)
+            function startAuto() {
+                autoTimer = setInterval(() => goTo(current + 1), 4500);
+            }
+            function stopAuto() {
+                clearInterval(autoTimer);
+            }
+            container.addEventListener('mouseenter', stopAuto);
+            container.addEventListener('mouseleave', startAuto);
+            startAuto();
+
+            // Touch / swipe support
+            let touchX = 0;
+            track.addEventListener('touchstart', e => { touchX = e.touches[0].clientX; }, { passive: true });
+            track.addEventListener('touchend', e => {
+                const diff = touchX - e.changedTouches[0].clientX;
+                if (Math.abs(diff) > 50) diff > 0 ? goTo(current + 1) : goTo(current - 1);
+            });
+
+            // Click slide → open lightbox
+            slides.forEach((slide, i) => {
+                slide.addEventListener('click', () => openLightbox(containerId, i));
+            });
+        }
+
+        /* ═══ Lightbox ═══ */
+        const lightbox  = document.getElementById('lightbox');
+        const lbImg     = document.getElementById('lightboxImg');
+        const lbClose   = document.getElementById('lightboxClose');
+        const lbPrev    = document.getElementById('lightboxPrev');
+        const lbNext    = document.getElementById('lightboxNext');
+        const lbCounter = document.getElementById('lightboxCounter');
+        let lbCurrent   = 0;
+        let lbImages    = [];
+
+        function collectImages(containerId) {
+            const container = document.getElementById(containerId);
+            if (!container) return [];
+            return Array.from(container.querySelectorAll('.carousel-slide img')).map(img => ({
+                src: img.src, alt: img.alt
             }));
+        }
 
-            const lightbox  = document.getElementById('lightbox');
-            const lbImg     = document.getElementById('lightboxImg');
-            const lbClose   = document.getElementById('lightboxClose');
-            const lbPrev    = document.getElementById('lightboxPrev');
-            const lbNext    = document.getElementById('lightboxNext');
-            const lbCounter = document.getElementById('lightboxCounter');
-            let current = 0;
+        function openLightbox(containerId, index) {
+            lbImages  = collectImages(containerId);
+            lbCurrent = index;
+            showLbSlide();
+            lightbox.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
 
-            function open(index) {
-                current = ((index % images.length) + images.length) % images.length;
-                lbImg.src = images[current].src;
-                lbImg.alt = images[current].alt;
-                lbCounter.textContent = (current + 1) + ' / ' + images.length;
-                lightbox.classList.add('active');
-                document.body.style.overflow = 'hidden';
-            }
+        function showLbSlide() {
+            lbCurrent = ((lbCurrent % lbImages.length) + lbImages.length) % lbImages.length;
+            lbImg.src = lbImages[lbCurrent].src;
+            lbImg.alt = lbImages[lbCurrent].alt;
+            lbCounter.textContent = (lbCurrent + 1) + ' / ' + lbImages.length;
+        }
 
-            function close() {
-                lightbox.classList.remove('active');
-                document.body.style.overflow = '';
-                setTimeout(() => { lbImg.src = ''; }, 300);
-            }
+        function closeLightbox() {
+            lightbox.classList.remove('active');
+            document.body.style.overflow = '';
+            setTimeout(() => { lbImg.src = ''; }, 300);
+        }
 
-            thumbs.forEach((thumb, i) => {
-                thumb.addEventListener('click', () => open(i));
-            });
+        lbClose.addEventListener('click', closeLightbox);
+        lbPrev.addEventListener('click', () => { lbCurrent--; showLbSlide(); });
+        lbNext.addEventListener('click', () => { lbCurrent++; showLbSlide(); });
+        lightbox.addEventListener('click', e => { if (e.target === lightbox) closeLightbox(); });
 
-            lbClose.addEventListener('click', close);
-            lbPrev.addEventListener('click', () => open(current - 1));
-            lbNext.addEventListener('click', () => open(current + 1));
+        document.addEventListener('keydown', e => {
+            if (!lightbox.classList.contains('active')) return;
+            if (e.key === 'Escape')      closeLightbox();
+            if (e.key === 'ArrowLeft')  { lbCurrent--; showLbSlide(); }
+            if (e.key === 'ArrowRight') { lbCurrent++; showLbSlide(); }
+        });
 
-            lightbox.addEventListener('click', (e) => {
-                if (e.target === lightbox) close();
-            });
-
-            document.addEventListener('keydown', (e) => {
-                if (!lightbox.classList.contains('active')) return;
-                if (e.key === 'Escape')       close();
-                if (e.key === 'ArrowLeft')    open(current - 1);
-                if (e.key === 'ArrowRight')   open(current + 1);
-            });
-        })();
+        /* ═══ Init all carousels ═══ */
+        initCarousel('techCarousel');
+        // When non-technical photos are ready, add: initCarousel('nonTechCarousel');
+    })();
     </script>
 </body>
 </html>
