@@ -14,13 +14,13 @@
         .carousel-container {
             position: relative;
             width: 100%;
-            max-width: 900px;
+            max-width: 680px;
             margin: 2rem auto 0;
-            border-radius: 20px;
+            border-radius: 14px;
             overflow: hidden;
-            background: rgba(0, 0, 0, 0.25);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            box-shadow: 0 16px 60px rgba(0, 0, 0, 0.4);
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            box-shadow: 0 8px 40px rgba(0, 0, 0, 0.3);
         }
 
         .carousel-track-wrapper {
@@ -43,10 +43,10 @@
 
         .carousel-slide img {
             width: 100%;
-            aspect-ratio: 16 / 10;
+            aspect-ratio: 16 / 9;
             object-fit: cover;
             display: block;
-            filter: brightness(0.9) saturate(1.1);
+            filter: brightness(0.92) saturate(1.05);
             transition: filter 0.4s ease;
         }
 
@@ -82,15 +82,15 @@
             position: absolute;
             top: 50%;
             transform: translateY(-50%);
-            width: 46px;
-            height: 46px;
+            width: 38px;
+            height: 38px;
             border-radius: 50%;
-            background: rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.08);
             backdrop-filter: blur(8px);
             -webkit-backdrop-filter: blur(8px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.15);
             color: #fff;
-            font-size: 1.3rem;
+            font-size: 1.1rem;
             cursor: pointer;
             display: flex;
             align-items: center;
@@ -123,10 +123,10 @@
         }
 
         .carousel-dot {
-            width: 10px;
-            height: 10px;
+            width: 7px;
+            height: 7px;
             border-radius: 50%;
-            border: 1.5px solid rgba(255, 255, 255, 0.35);
+            border: 1.5px solid rgba(255, 255, 255, 0.3);
             background: transparent;
             cursor: pointer;
             transition: all 0.3s ease;
@@ -498,29 +498,49 @@
                 <div class="carousel-track" id="techTrack">
 
                     <div class="carousel-slide">
-                        <img src="images/mainpage1.jpeg" alt="Technical Event – The Arena" loading="lazy">
-                        <div class="slide-caption">The Arena</div>
+                        <img src="images/posters and photos/aiprompt1.jpeg" alt="Prompt Wars – AI Prompt Engineering Event" loading="lazy">
+                        <div class="slide-caption">Prompt Wars — Whispering to AI</div>
                     </div>
 
                     <div class="carousel-slide">
-                        <img src="images/mainpage2.jpeg" alt="Technical Event – Minds At Work" loading="lazy">
-                        <div class="slide-caption">Minds At Work</div>
+                        <img src="images/posters and photos/aiprompt2.jpeg" alt="Prompt Wars – Participants in Action" loading="lazy">
+                        <div class="slide-caption">Prompt Wars — Minds at Work</div>
                     </div>
 
                     <div class="carousel-slide">
-                        <img src="images/mainpage3.jpeg" alt="Technical Event – Team Synergy" loading="lazy">
-                        <div class="slide-caption">Team Synergy</div>
+                        <img src="images/posters and photos/buildgame1.jpeg" alt="Arcade Rush – Game Development Event" loading="lazy">
+                        <div class="slide-caption">Arcade Rush — Code, Compile, Play</div>
                     </div>
 
                     <div class="carousel-slide">
-                        <img src="images/mainpage4.jpeg" alt="Technical Event – Code & Conquer" loading="lazy">
-                        <div class="slide-caption">Code &amp; Conquer</div>
+                        <img src="images/posters and photos/buildgame2.jpeg" alt="Arcade Rush – Building Games from Scratch" loading="lazy">
+                        <div class="slide-caption">Arcade Rush — Crafting the Fun</div>
+                    </div>
+
+                    <div class="carousel-slide">
+                        <img src="images/posters and photos/quiz1.jpeg" alt="Mind Sweeper – Tech Quiz Event" loading="lazy">
+                        <div class="slide-caption">Mind Sweeper — The Ultimate Quiz</div>
+                    </div>
+
+                    <div class="carousel-slide">
+                        <img src="images/posters and photos/techgame1.jpeg" alt="Technical Event – Innovation on Display" loading="lazy">
+                        <div class="slide-caption">Tech Arena — Innovation Unleashed</div>
+                    </div>
+
+                    <div class="carousel-slide">
+                        <img src="images/posters and photos/techgame2.jpeg" alt="Technical Event – Team Competition" loading="lazy">
+                        <div class="slide-caption">Tech Arena — Battle of Brains</div>
+                    </div>
+
+                    <div class="carousel-slide">
+                        <img src="images/posters and photos/techgame3.jpeg" alt="Technical Event – Grand Finale" loading="lazy">
+                        <div class="slide-caption">Tech Arena — The Grand Showdown</div>
                     </div>
 
                 </div>
                 <button class="carousel-btn prev" aria-label="Previous slide">&#8592;</button>
                 <button class="carousel-btn next" aria-label="Next slide">&#8594;</button>
-                <div class="carousel-counter" id="techCounter">1 / 4</div>
+                <div class="carousel-counter" id="techCounter">1 / 8</div>
             </div>
             <div class="carousel-dots" id="techDots"></div>
         </div>
